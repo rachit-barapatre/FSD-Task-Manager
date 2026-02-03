@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Task Manager</title>
+    <title>Task Manager</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
 
     <div class="container">
@@ -20,10 +22,17 @@
             <button id="addBtn"><i class="fas fa-plus"></i></button>
         </div>
 
+        <div class="filter-group">
+            <button id="filterAll" class="filter-btn active">All</button>
+            <button id="filterPending" class="filter-btn">Pending</button>
+            <button id="filterCompleted" class="filter-btn">Completed</button>
+        </div>
+
         <ul id="taskList" class="task-list">
-            </ul>
+        </ul>
     </div>
 
     <script src="js/app.js"></script>
 </body>
+
 </html>
