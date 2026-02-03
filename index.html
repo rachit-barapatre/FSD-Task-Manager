@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager</title>
+    <title>Task Board</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -13,13 +13,24 @@
 
     <div class="container">
         <header>
-            <h1>My Tasks</h1>
+            <div class="header-top">
+                <h1>My Tasks</h1>
+                <button id="themeToggle" class="btn-theme"><i class="fas fa-moon"></i></button>
+            </div>
             <p id="stats">0/0 Completed</p>
         </header>
 
-        <div class="input-group">
-            <input type="text" id="taskInput" placeholder="What needs to be done?">
-            <button id="addBtn"><i class="fas fa-plus"></i></button>
+        <div class="input-wrapper">
+            <div class="input-group">
+                <input type="text" id="taskInput" placeholder="Task Title (e.g., Project Meeting)">
+                <textarea id="descInput" placeholder="Add details... (optional)" rows="1"></textarea>
+            </div>
+
+            <div class="controls-group">
+                <input type="date" id="dateInput" class="date-picker">
+                <button id="micBtn" class="btn-mic"><i class="fas fa-microphone"></i></button>
+                <button id="addBtn"><i class="fas fa-plus"></i></button>
+            </div>
         </div>
 
         <div class="filter-group">
@@ -30,8 +41,13 @@
 
         <ul id="taskList" class="task-list">
         </ul>
+
     </div>
 
+    <div id="toast" class="toast hidden">
+        <span>Task Deleted 🗑️</span>
+        <button onclick="undoDelete()" class="btn-undo">UNDO</button>
+    </div>
     <script src="js/app.js"></script>
 </body>
 

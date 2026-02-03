@@ -1,38 +1,95 @@
 // 1. Select DOM Elements
 const taskInput = document.getElementById('taskInput');
+const descInput = document.getElementById('descInput'); 
 const addBtn = document.getElementById('addBtn');
 const taskList = document.getElementById('taskList');
 const stats = document.getElementById('stats');
-let currentFilter = 'all'; // Default state
-let editId = null; // Agar ye null nahi hai, matlab hum edit kar rahe hain
+const dateInput = document.getElementById('dateInput');
+const micBtn = document.getElementById('micBtn');
+const themeToggle = document.getElementById('themeToggle');
+const toast = document.getElementById('toast'); // Undo notification
+const body = document.body;
 
-// 2. Initial State (Data Model)
+// 2. Initial State
+let currentFilter = 'all'; 
+let editId = null; 
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+let lastDeletedTask = null; // Backup for Undo
+let toastTimer = null;
 
-// 3. Save to LocalStorage
+// --- UTILITY FUNCTIONS ---
+
 const saveLocal = () => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
-// 4. Update Stats (User Motivation)
+// Date Badge Logic
+const getBadge = (dateString) => {
+    if (!dateString) return ''; 
+
+    const taskDate = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+    taskDate.setHours(0, 0, 0, 0);
+
+    if (taskDate < today) {
+        return `<span class="badge badge-overdue">Overdue ⚠️</span>`;
+    } else if (taskDate.getTime() === today.getTime()) {
+        return `<span class="badge badge-today">Today 🔥</span>`;
+    } else {
+        const options = { month: 'short', day: 'numeric' };
+        return `<span class="badge badge-future">📅 ${taskDate.toLocaleDateString('en-US', options)}</span>`;
+    }
+};
+
+// Confetti Effect
+const confettiEffect = () => {
+    const header = document.querySelector('header h1');
+    if (!header) return;
+    
+    const originalText = header.innerText;
+    header.innerText = "🎉 All Done! Great Job! 🎉";
+    header.style.color = "#2ecc71"; 
+    
+    setTimeout(() => {
+        header.innerText = originalText;
+        header.style.color = ""; 
+    }, 3000);
+};
+
+// Toast Notification (Undo Logic)
+const showToast = () => {
+    if (!toast) return; // Safety check
+    if (toastTimer) clearTimeout(toastTimer);
+    
+    toast.classList.add('show');
+    
+    toastTimer = setTimeout(() => {
+        hideToast();
+        lastDeletedTask = null; // Time up
+    }, 3000);
+};
+
+const hideToast = () => {
+    if (toast) toast.classList.remove('show');
+};
+
+// --- CORE FUNCTIONS ---
+
 const updateStats = () => {
     const completed = tasks.filter(t => t.completed).length;
     const total = tasks.length;
     
-    stats.innerText = `${completed} / ${total} Completed`;
+    if(stats) stats.innerText = `${completed} / ${total} Completed`;
     
-    // --- Progress Bar & Celebration Logic ---
-    // Agar sab complete ho gaya aur tasks 0 nahi hain
     if(total > 0 && completed === total) {
-        confettiEffect(); // Ye function hum niche banayenge
+        confettiEffect(); 
     }
 };
 
-// 5. Render UI (Sabse Important Function)
 const renderTasks = () => {
     taskList.innerHTML = "";
 
-    // 1. Filter Logic
     let filteredTasks = tasks;
     if (currentFilter === 'pending') {
         filteredTasks = tasks.filter(task => !task.completed);
@@ -40,24 +97,32 @@ const renderTasks = () => {
         filteredTasks = tasks.filter(task => task.completed);
     }
 
-    // 2. Render Filtered Tasks
     filteredTasks.forEach((task) => {
         const li = document.createElement('li');
         li.className = task.completed ? 'completed' : '';
 
+        const descriptionHtml = task.description 
+            ? `<p class="task-desc">${task.description}</p>` 
+            : '';
+
         li.innerHTML = `
             <div class="task-info">
                 <span class="task-text">${task.text}</span>
+                ${descriptionHtml}
+                <div class="task-meta">
+                    ${getBadge(task.date)} 
+                </div>
             </div>
+
             <div class="actions">
-    <button onclick="editTask('${task.id}')" class="btn-edit"><i class="fas fa-pen"></i></button>
-    <button onclick="toggleTask('${task.id}')" class="btn-check">
-        <i class="fas ${task.completed ? 'fa-undo' : 'fa-check'}"></i>
-    </button>
-    <button onclick="deleteTask('${task.id}')" class="btn-delete">
-        <i class="fas fa-trash"></i>
-    </button>
-</div>
+                <button onclick="editTask('${task.id}')" class="btn-edit"><i class="fas fa-pen"></i></button>
+                <button onclick="toggleTask('${task.id}')" class="btn-check">
+                    <i class="fas ${task.completed ? 'fa-undo' : 'fa-check'}"></i>
+                </button>
+                <button onclick="deleteTask('${task.id}')" class="btn-delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
         `;
         taskList.appendChild(li);
     });
@@ -65,27 +130,28 @@ const renderTasks = () => {
     updateStats();
 };
 
-// 6. Add Task Logic
 const addTask = () => {
     const text = taskInput.value.trim();
-    if (text === '') return alert("Please write a task!");
+    const desc = descInput.value.trim();
+    const date = dateInput.value; 
+
+    if (text === '') return alert("Please write a task title!");
 
     if (editId) {
-        // --- UPDATE MODE ---
-        // Purane task ko dhund ke update karo
+        // Update Mode
         tasks = tasks.map(task => 
-            task.id === editId ? { ...task, text: text } : task
+            task.id === editId ? { ...task, text: text, description: desc, date: date } : task
         );
-        
-        // Reset everything
         editId = null;
         addBtn.innerHTML = '<i class="fas fa-plus"></i>';
-        addBtn.style.background = ""; // Default color wapas
+        addBtn.style.background = ""; 
     } else {
-        // --- ADD MODE ---
+        // Add Mode
         const newTask = {
             id: Date.now().toString(),
             text: text,
+            description: desc,
+            date: date, 
             completed: false,
             createdAt: new Date().toISOString()
         };
@@ -94,10 +160,15 @@ const addTask = () => {
 
     saveLocal();
     renderTasks();
-    taskInput.value = ""; // Clear input
+    
+    // Reset Inputs
+    taskInput.value = ""; 
+    descInput.value = "";
+    dateInput.value = ""; 
 };
 
-// 7. Toggle Complete Logic
+// --- GLOBAL WINDOW FUNCTIONS ---
+
 window.toggleTask = (id) => {
     tasks = tasks.map(task =>
         task.id === id ? { ...task, completed: !task.completed } : task
@@ -106,68 +177,133 @@ window.toggleTask = (id) => {
     renderTasks();
 };
 
-// 8. Delete Logic
+// Updated Delete Logic with Undo
 window.deleteTask = (id) => {
-    if (confirm("Are you sure?")) {
-        tasks = tasks.filter(task => task.id !== id);
+    const taskIndex = tasks.findIndex(t => t.id === id);
+    if (taskIndex > -1) {
+        lastDeletedTask = tasks[taskIndex]; // Backup logic
+        tasks.splice(taskIndex, 1);
+        
         saveLocal();
         renderTasks();
+        showToast(); // Show Undo popup
+    }
+};
+
+// Undo Function
+window.undoDelete = () => {
+    if (lastDeletedTask) {
+        tasks.push(lastDeletedTask);
+        saveLocal();
+        renderTasks();
+        
+        lastDeletedTask = null;
+        hideToast();
     }
 };
 
 window.editTask = (id) => {
     const taskToEdit = tasks.find(task => task.id === id);
     if(taskToEdit) {
-        taskInput.value = taskToEdit.text; // Text wapas input me bhejo
-        taskInput.focus(); // Cursor wahan le jao
-        editId = id; // Flag set kar do ki hum edit kar rahe hain
-        addBtn.innerHTML = '<i class="fas fa-save"></i>'; // Icon badal do
-        addBtn.style.background = "#2ecc71"; // Color change (Optional feedback)
+        taskInput.value = taskToEdit.text;
+        descInput.value = taskToEdit.description || "";
+        dateInput.value = taskToEdit.date; 
+        
+        taskInput.focus();
+        editId = id;
+        addBtn.innerHTML = '<i class="fas fa-save"></i>';
+        addBtn.style.background = "#2ecc71";
     }
 };
 
-// 9. Event Listeners
+// --- THEME TOGGLE ---
+if (themeToggle) {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        body.classList.add('dark');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    }
+
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark');
+        if (body.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+            localStorage.setItem('theme', 'light');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+    });
+}
+
+// --- SMART VOICE RECOGNITION (Fix applied here) ---
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+// 1. Focus Tracker: Pata karo user kahan likhna chahta hai
+let activeInput = taskInput; // Default Title
+
+taskInput.addEventListener('focus', () => { activeInput = taskInput; });
+descInput.addEventListener('focus', () => { activeInput = descInput; });
+
+if (SpeechRecognition && micBtn) {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+
+    micBtn.addEventListener('click', () => {
+        if (micBtn.classList.contains('listening')) {
+            recognition.stop();
+        } else {
+            recognition.start();
+        }
+    });
+
+    recognition.onstart = () => {
+        micBtn.classList.add('listening');
+        // Jo box active hai, wahan placeholder change karo
+        activeInput.placeholder = "Listening... Speak now 🗣️";
+    };
+
+    recognition.onend = () => {
+        micBtn.classList.remove('listening');
+        // Reset placeholders
+        taskInput.placeholder = "Task Title (e.g., Project Meeting)";
+        descInput.placeholder = "Add details... (optional)";
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        
+        // Smart Insert: Jo box last click kiya tha, wahan text daalo
+        activeInput.value = transcript;
+    };
+
+} else if (micBtn) {
+    micBtn.style.display = 'none';
+}
+
+// --- EVENT LISTENERS ---
 addBtn.addEventListener('click', addTask);
 taskInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') addTask();
 });
 
-// Filter Logic
 const filters = {
     all: document.getElementById('filterAll'),
     pending: document.getElementById('filterPending'),
     completed: document.getElementById('filterCompleted')
 };
 
-// Ek helper function jo active class switch karega
 const setActiveFilter = (type) => {
-    // UI update
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-    filters[type].classList.add('active');
-
-    // State update & Re-render
+    if(filters[type]) filters[type].classList.add('active');
     currentFilter = type;
     renderTasks();
 };
 
-// Click Events
-filters.all.addEventListener('click', () => setActiveFilter('all'));
-filters.pending.addEventListener('click', () => setActiveFilter('pending'));
-filters.completed.addEventListener('click', () => setActiveFilter('completed'));
-// Initial Render
-renderTasks();
+if(filters.all) filters.all.addEventListener('click', () => setActiveFilter('all'));
+if(filters.pending) filters.pending.addEventListener('click', () => setActiveFilter('pending'));
+if(filters.completed) filters.completed.addEventListener('click', () => setActiveFilter('completed'));
 
-const confettiEffect = () => {
-    // Basic visual feedback
-    const header = document.querySelector('header h1');
-    const originalText = header.innerText;
-    
-    header.innerText = "🎉 All Done! Great Job! 🎉";
-    header.style.color = "#2ecc71"; // Green color
-    
-    // 3 second baad wapas normal kar do
-    setTimeout(() => {
-        header.innerText = originalText;
-        header.style.color = "var(--primary-color)";
-    }, 3000);
-};
+// --- INITIAL RENDER ---
+renderTasks();
