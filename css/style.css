@@ -414,3 +414,5 @@ body.dark .actions {
 .btn-undo:hover {
     text-decoration: underline;
 }
+
+.hidden { display: none !important; }

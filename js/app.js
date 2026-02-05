@@ -308,13 +308,12 @@
 // // --- INITIAL RENDER ---
 // renderTasks();
 
-console.log("Firebase App Started... 🚀");
-
-// --- IMPORT FIREBASE (Browser Friendly Links) ---
+// --- IMPORTS (Auth + Database) ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
-// --- 🔴 TERA CONFIG (Maine Yahan Laga Diya Hai) 🔴 ---
+// --- TERA CONFIG (Ready to use) ---
 const firebaseConfig = {
     apiKey: "AIzaSyBhmspI5mFEoTw7S1VuLfp_8S-QqBullXw",
     authDomain: "pro-task-board.firebaseapp.com",
@@ -327,9 +326,19 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const tasksCol = collection(db, "tasks"); // Cloud pe "tasks" naam ka folder
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+const tasksCol = collection(db, "tasks");
 
 // --- DOM ELEMENTS ---
+// Login Screens
+const loginScreen = document.getElementById('loginScreen');
+const appContainer = document.getElementById('appContainer');
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const userDisplay = document.getElementById('userDisplay');
+
+// App Elements
 const taskInput = document.getElementById('taskInput');
 const descInput = document.getElementById('descInput'); 
 const addBtn = document.getElementById('addBtn');
@@ -337,27 +346,133 @@ const taskList = document.getElementById('taskList');
 const stats = document.getElementById('stats');
 const dateInput = document.getElementById('dateInput');
 const micBtn = document.getElementById('micBtn');
-const themeToggle = document.getElementById('themeToggle'); // Dark mode button
+const themeToggle = document.getElementById('themeToggle');
 
 // --- STATE ---
 let tasks = [];
+let currentUser = null; 
+let unsubscribe = null; // Listener band karne ke liye
 let currentFilter = 'all';
 let editId = null;
 
-// --- REAL-TIME LISTENER (Magic happens here) ---
-onSnapshot(tasksCol, (snapshot) => {
-    tasks = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-    
-    // Sort tasks (Newest first)
-    tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
-    renderTasks();
+// ==========================================
+// 🔐 AUTHENTICATION LOGIC (Login/Logout)
+// ==========================================
+
+// 1. Login with Google
+if(loginBtn) {
+    loginBtn.addEventListener('click', () => {
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                console.log("Login Success:", result.user.email);
+            })
+            .catch((error) => {
+                console.error("Login Failed:", error);
+                alert("Login Error: " + error.message);
+            });
+    });
+}
+
+// 2. Logout
+if(logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+        if(confirm("Are you sure you want to logout?")) {
+            signOut(auth).then(() => {
+                console.log("Logged out");
+            });
+        }
+    });
+}
+
+// 3. User Monitor (Auto Check)
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // --- USER LOGGED IN ---
+        currentUser = user;
+        loginScreen.classList.add('hidden');    // Hide Login
+        appContainer.classList.remove('hidden');// Show App
+        
+        if(userDisplay) userDisplay.innerText = `👤 ${user.displayName}`;
+        
+        // Load ONLY this user's tasks
+        loadUserTasks(user.uid);
+    } else {
+        // --- USER LOGGED OUT ---
+        currentUser = null;
+        loginScreen.classList.remove('hidden'); // Show Login
+        appContainer.classList.add('hidden');   // Hide App
+        
+        if (unsubscribe) unsubscribe(); // Stop database listener
+        tasks = []; 
+        renderTasks(); 
+    }
 });
 
-// --- RENDER UI ---
+// ==========================================
+// ☁️ DATABASE LOGIC (Firestore)
+// ==========================================
+
+const loadUserTasks = (uid) => {
+    // Query: Select * From Tasks WHERE uid == current_user_id
+    const q = query(tasksCol, where("uid", "==", uid));
+
+    unsubscribe = onSnapshot(q, (snapshot) => {
+        tasks = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+        
+        // Manual Sort (Newest First)
+        tasks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        renderTasks();
+    });
+};
+
+const addTask = async () => {
+    const text = taskInput.value.trim();
+    const desc = descInput ? descInput.value.trim() : ""; 
+    const date = dateInput.value;
+
+    if (!currentUser) return alert("Please login first!");
+    if (text === '') return alert("Please write a task!");
+
+    addBtn.innerText = "⏳"; 
+
+    try {
+        if (editId) {
+            // Update
+            const taskRef = doc(db, "tasks", editId);
+            await updateDoc(taskRef, { text, description: desc, date });
+            editId = null;
+            addBtn.innerHTML = '<i class="fas fa-plus"></i>';
+            addBtn.style.background = "";
+        } else {
+            // Add New (with UID)
+            await addDoc(tasksCol, {
+                text: text,
+                description: desc,
+                date: date,
+                completed: false,
+                createdAt: new Date().toISOString(),
+                uid: currentUser.uid // 🔴 USER ID SAVE KARO
+            });
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Failed to save. Check console.");
+    }
+
+    addBtn.innerHTML = '<i class="fas fa-plus"></i>';
+    taskInput.value = "";
+    if(descInput) descInput.value = "";
+    dateInput.value = "";
+};
+
+// ==========================================
+// 🎨 UI & HELPERS
+// ==========================================
+
 const renderTasks = () => {
     taskList.innerHTML = "";
-
+    
     let filteredTasks = tasks;
     if (currentFilter === 'pending') filteredTasks = tasks.filter(t => !t.completed);
     else if (currentFilter === 'completed') filteredTasks = tasks.filter(t => t.completed);
@@ -366,7 +481,6 @@ const renderTasks = () => {
         const li = document.createElement('li');
         li.className = task.completed ? 'completed' : '';
 
-        // Description handle kar rahe hain
         const descriptionHtml = task.description 
             ? `<p class="task-desc" style="font-size:0.9rem; color:#888;">${task.description}</p>` 
             : '';
@@ -377,7 +491,6 @@ const renderTasks = () => {
                 ${descriptionHtml}
                 <div class="task-meta">${getBadge(task.date)}</div>
             </div>
-
             <div class="actions">
                 <button onclick="editTask('${task.id}')" class="btn-edit"><i class="fas fa-pen"></i></button>
                 <button onclick="toggleTask('${task.id}')" class="btn-check">
@@ -393,60 +506,16 @@ const renderTasks = () => {
     updateStats();
 };
 
-// --- ADD / UPDATE TASK ---
-const addTask = async () => {
-    const text = taskInput.value.trim();
-    const desc = descInput ? descInput.value.trim() : ""; 
-    const date = dateInput.value;
-
-    if (text === '') return alert("Please write a task!");
-
-    addBtn.innerText = "⏳"; // Loading visual
-
-    try {
-        if (editId) {
-            // Update on Cloud
-            const taskRef = doc(db, "tasks", editId);
-            await updateDoc(taskRef, { text: text, description: desc, date: date });
-            
-            editId = null;
-            addBtn.innerHTML = '<i class="fas fa-plus"></i>';
-            addBtn.style.background = "";
-        } else {
-            // Add to Cloud
-            await addDoc(tasksCol, {
-                text: text,
-                description: desc,
-                date: date,
-                completed: false,
-                createdAt: new Date().toISOString()
-            });
-        }
-    } catch (error) {
-        console.error("Error adding task: ", error);
-        alert("Error saving to cloud! Check console (F12).");
-    }
-
-    addBtn.innerHTML = '<i class="fas fa-plus"></i>';
-    taskInput.value = "";
-    if(descInput) descInput.value = "";
-    dateInput.value = "";
-};
-
-// --- GLOBAL FUNCTIONS (Window se attach zaroori hai module ke liye) ---
-
+// --- Global Functions for HTML ---
 window.deleteTask = async (id) => {
-    if (confirm("Delete permanently from cloud?")) {
+    if (confirm("Delete this task?")) {
         await deleteDoc(doc(db, "tasks", id));
     }
 };
 
 window.toggleTask = async (id) => {
     const task = tasks.find(t => t.id === id);
-    if(task) {
-        const taskRef = doc(db, "tasks", id);
-        await updateDoc(taskRef, { completed: !task.completed });
-    }
+    if(task) await updateDoc(doc(db, "tasks", id), { completed: !task.completed });
 };
 
 window.editTask = (id) => {
@@ -462,20 +531,11 @@ window.editTask = (id) => {
     }
 };
 
-// --- UTILITY ---
+// --- Utilities ---
 const getBadge = (dateString) => {
     if (!dateString) return ''; 
-    const taskDate = new Date(dateString);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); 
-    taskDate.setHours(0, 0, 0, 0);
-
-    if (taskDate < today) return `<span class="badge badge-overdue">Overdue ⚠️</span>`;
-    else if (taskDate.getTime() === today.getTime()) return `<span class="badge badge-today">Today 🔥</span>`;
-    else {
-        const options = { month: 'short', day: 'numeric' };
-        return `<span class="badge badge-future">📅 ${taskDate.toLocaleDateString('en-US', options)}</span>`;
-    }
+    const d = new Date(dateString);
+    return `<span class="badge badge-future">📅 ${d.toLocaleDateString()}</span>`;
 };
 
 const updateStats = () => {
@@ -483,11 +543,11 @@ const updateStats = () => {
     if(stats) stats.innerText = `${completed} / ${tasks.length} Completed`;
 };
 
-// --- EVENT LISTENERS ---
+// --- Event Listeners ---
 if(addBtn) addBtn.addEventListener('click', addTask);
 if(taskInput) taskInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addTask(); });
 
-// Filter Logic
+// Filter
 const filters = {
     all: document.getElementById('filterAll'),
     pending: document.getElementById('filterPending'),
@@ -503,14 +563,14 @@ if(filters.all) filters.all.addEventListener('click', () => setActiveFilter('all
 if(filters.pending) filters.pending.addEventListener('click', () => setActiveFilter('pending'));
 if(filters.completed) filters.completed.addEventListener('click', () => setActiveFilter('completed'));
 
-// --- THEME TOGGLE (Agar button hai toh) ---
+// Theme Toggle
 if (themeToggle) {
     themeToggle.addEventListener('click', () => {
         document.body.classList.toggle('dark');
     });
 }
 
-// --- VOICE LOGIC ---
+// Voice Logic
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 if (SpeechRecognition && micBtn) {
     const recognition = new SpeechRecognition();
@@ -520,17 +580,7 @@ if (SpeechRecognition && micBtn) {
         if (micBtn.classList.contains('listening')) recognition.stop();
         else recognition.start();
     });
-
-    recognition.onstart = () => {
-        micBtn.classList.add('listening');
-        taskInput.placeholder = "Listening...";
-    };
-
-    recognition.onend = () => {
-        micBtn.classList.remove('listening');
-        taskInput.placeholder = "Type or Speak...";
-    };
-
+    
     recognition.onresult = (event) => {
         taskInput.value = event.results[0][0].transcript;
     };
