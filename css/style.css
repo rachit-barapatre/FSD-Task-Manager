@@ -416,3 +416,59 @@ body.dark .actions {
 }
 
 .hidden { display: none !important; }
+
+/* Smooth Delete Animation */
+.task-list li {
+    transition: all 0.4s ease; /* Smooth transition enable karega */
+    max-height: 500px;
+    overflow: hidden;
+}
+
+.task-deleting {
+    opacity: 0;                /* Invisible ho jayega */
+    transform: translateX(100px); /* Right side slide karega */
+    max-height: 0 !important;  /* Height khatam */
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+/* --- UNDO TOAST (Corrected) --- */
+#undoToast {
+    position: fixed; /* Screen par chipka rahega */
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333; /* Black background */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 9999; /* Sabse upar dikhega */
+    min-width: 200px;
+    justify-content: space-between;
+}
+
+/* Jab hidden class lagi ho toh gayab ho jaye */
+#undoToast.hidden {
+    display: none !important;
+}
+
+#undoBtn {
+    background: #6C63FF;
+    border: none;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+#undoBtn:hover {
+    background: #5a52d5;
+}
+

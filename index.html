@@ -10,8 +10,7 @@
     
     <style>
         .hidden { display: none !important; }
-        
-        /* Login Screen Styles */
+ 
         #loginScreen {
             height: 100vh;
             display: flex;
@@ -19,9 +18,11 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+            background: #f4f4f9;
         }
+
         #loginBtn {
-            background: #4285F4; /* Google Blue */
+            background: #4285F4;
             color: white;
             border: none;
             padding: 12px 24px;
@@ -35,26 +36,20 @@
             transition: transform 0.2s;
         }
         #loginBtn:hover { transform: scale(1.05); }
-        
-        /* Logout Button Style */
-        #logoutBtn {
-            background: transparent;
-            border: 1px solid #ff6b6b;
-            color: #ff6b6b;
-            padding: 5px 12px;
-            border-radius: 15px;
+
+        /* AI Button */
+        .btn-ai {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 0.8rem;
-            margin-left: 10px;
+            margin-right: 5px;
+            transition: transform 0.2s;
         }
-        #logoutBtn:hover { background: #ff6b6b; color: white; }
-        
-        #userDisplay {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 5px;
-            font-weight: 600;
-        }
+        .btn-ai:hover { transform: scale(1.1); }
+        .btn-ai:disabled { opacity: 0.7; cursor: wait; }
     </style>
 </head>
 
@@ -63,35 +58,40 @@
     <div id="loginScreen">
         <h1 style="color: #6C63FF; font-size: 2.5rem; margin-bottom: 10px;">Pro Task Board 🚀</h1>
         <p style="color: #888; margin-bottom: 30px;">Login to save your tasks on Cloud.</p>
-        
-        <button id="loginBtn">
-            <i class="fab fa-google"></i> Sign in with Google
-        </button>
+        <button id="loginBtn"><i class="fab fa-google"></i> Sign in with Google</button>
     </div>
 
     <div class="container hidden" id="appContainer">
         <header>
             <div class="header-top">
                 <h1>My Tasks</h1>
-                <div style="display: flex; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 10px;">
                     <button id="themeToggle" class="btn-theme"><i class="fas fa-moon"></i></button>
-                    <button id="logoutBtn">Logout</button>
+                    <button id="logoutBtn" style="border: 1px solid #ff6b6b; background: none; color: #ff6b6b; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Logout</button>
                 </div>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
                 <p id="stats">0/0 Completed</p>
-                <p id="userDisplay"></p> </div>
+                <p id="userDisplay" style="font-weight: bold; color: #6C63FF;"></p>
+            </div>
         </header>
 
         <div class="input-wrapper">
             <div class="input-group">
-                <input type="text" id="taskInput" placeholder="Task Title (e.g., Project Meeting)">
+                <input type="text" id="taskInput" placeholder="Task Title (e.g., Plan Trip)">
                 <textarea id="descInput" placeholder="Add details... (optional)" rows="1"></textarea>
             </div>
+            
+            <p id="aiStatus" style="font-size: 0.9rem; margin: 5px 0; font-weight: 500; min-height: 20px; color: #666;"></p>
 
-            <div class="controls-group">
+            <div class="controls-group" style="display: flex; align-items: center; gap: 5px; margin-top: 10px;">
                 <input type="date" id="dateInput" class="date-picker">
                 <button id="micBtn" class="btn-mic"><i class="fas fa-microphone"></i></button>
+                
+                <button id="aiBtn" class="btn-ai" title="Ask AI">
+                    <i class="fas fa-magic"></i>
+                </button>
+
                 <button id="addBtn"><i class="fas fa-plus"></i></button>
             </div>
         </div>
@@ -102,16 +102,13 @@
             <button id="filterCompleted" class="filter-btn">Completed</button>
         </div>
 
-        <ul id="taskList" class="task-list">
-        </ul>
+        <ul id="taskList" class="task-list"></ul>
     </div>
 
-    <div id="toast" class="toast hidden">
-        <span>Task Deleted 🗑️</span>
-        <button onclick="undoDelete()" class="btn-undo">UNDO</button>
-    </div>
-
+    <div id="undoToast" class="hidden">
+    <span>Task Deleted! 🗑️</span>
+    <button id="undoBtn">UNDO ↩️</button>
+</div>
     <script type="module" src="js/app.js"></script>
 </body>
-
 </html>
