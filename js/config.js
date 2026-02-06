@@ -1,6 +1,4 @@
 // js/config.js
-
-// Yahan apni asli keys daal de
 export const API_KEY = "AIzaSyD5h2WpUtA6WVG5-xXA3FpFkvsW4dtrvkk";
 
 export const firebaseConfig = {
