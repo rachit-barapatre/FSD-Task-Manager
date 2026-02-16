@@ -1,65 +1,98 @@
-// Mobile Menu Toggle
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('.nav-menu');
-
-if (hamburger) {
-    hamburger.addEventListener('click', () => {
-        navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // ============================================
+    // THEME TOGGLE
+    // ============================================
+    
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlElement = document.documentElement;
+    
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    htmlElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+    
+    function updateThemeIcon(theme) {
+        const icon = themeToggle.querySelector('i');
+        if (theme === 'dark') {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        } else {
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+        }
+    }
+    
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        htmlElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
     });
-
-    // Close menu when a link is clicked
-    document.querySelectorAll('.nav-link').forEach(link => {
+    
+    // ============================================
+    // HAMBURGER MENU
+    // ============================================
+    
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    
+    hamburger.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    });
+    
+    navMenu.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            navMenu.style.display = 'none';
+            navMenu.classList.remove('active');
+            hamburger.classList.remove('active');
         });
     });
-}
-
-// Smooth scroll for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
+    
+    // ============================================
+    // SMOOTH SCROLL
+    // ============================================
+    
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href !== '#') {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    });
+    
+    // ============================================
+    // DEMO MODAL
+    // ============================================
+    
+    const demoBtn = document.getElementById('demoBtn');
+    const modal = document.getElementById('modal');
+    const modalClose = document.getElementById('modalClose');
+    
+    demoBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+    });
+    
+    modalClose.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
         }
     });
-});
-
-// Navbar background change on scroll
-const navbar = document.querySelector('.navbar');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.15)';
-    } else {
-        navbar.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.05)';
-    }
-});
-
-// Intersection Observer for animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            modal.classList.remove('active');
         }
     });
-}, observerOptions);
-
-// Observe feature cards
-document.querySelectorAll('.feature-card').forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(20px)';
-    card.style.transition = 'all 0.6s ease';
-    observer.observe(card);
+    
+    console.log('✅ TaskBoard Manager loaded successfully!');
 });
-
-console.log('TaskBoard Manager website loaded successfully!');

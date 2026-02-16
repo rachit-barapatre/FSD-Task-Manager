@@ -3,204 +3,362 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TaskBoard Manager - A powerful full-stack task management application to organize, track, and collaborate on projects efficiently.">
-    <meta name="keywords" content="task management, productivity, project management, task board">
-    <meta name="author" content="Rachit Barapatre">
+    <meta name="description" content="TaskBoard Manager - Professional task management platform">
+    <meta name="theme-color" content="#2d5a7b">
     
-    <title>TaskBoard Manager - Organize Your Work</title>
+    <title>TaskBoard Manager - Professional Task Management Platform</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="container">
+    <header class="navbar">
+        <div class="navbar-container">
             <div class="navbar-brand">
-                <h1><i class="fas fa-tasks"></i> TaskBoard Manager</h1>
+                <a href="#home" class="brand-logo">
+                    <span class="logo-icon">📋</span>
+                    <span class="brand-text">TaskBoard</span>
+                </a>
             </div>
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#features" class="nav-link">Features</a></li>
-                <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
-                <li><a href="#demo" class="nav-link">Demo</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-                <li><a href="https://taskboard-manager.vercel.app/" class="btn btn-primary" target="_blank">Launch App</a></li>
-            </ul>
-            <div class="hamburger">
+            
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
                 <span></span>
                 <span></span>
                 <span></span>
+            </button>
+
+            <nav class="nav-menu" id="navMenu">
+                <a href="#features">Features</a>
+                <a href="#benefits">Benefits</a>
+                <a href="#workflow">Workflow</a>
+                <a href="#pricing">Pricing</a>
+            </nav>
+
+            <div class="navbar-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="https://taskboard-manager.vercel.app/" class="btn-nav" target="_blank">
+                    Launch App
+                </a>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2>Manage Your Tasks Effortlessly</h2>
-                <p>A full-stack task management application designed to boost your productivity and keep your projects organized.</p>
-                <div class="hero-buttons">
-                    <a href="https://taskboard-manager.vercel.app/" class="btn btn-primary btn-lg" target="_blank">Get Started Free</a>
-                    <a href="#features" class="btn btn-secondary btn-lg">Learn More</a>
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-star"></i> Professional Task Manager
+                    </div>
+                    <h1>Your Productivity Hub Awaits</h1>
+                    <p>Designed for modern teams. Built for maximum productivity. Intuitive task management that adapts to your workflow.</p>
+                    
+                    <div class="hero-buttons">
+                        <a href="https://taskboard-manager.vercel.app/" class="btn btn-primary" target="_blank">
+                            Start Free Today
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <button class="btn btn-secondary" id="demoBtn">
+                            Watch Demo
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="hero-image">
-                <div class="dashboard-mockup">
-                    <div class="mockup-card">
-                        <div class="mockup-header">
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
+
+                <div class="hero-visual">
+                    <div class="floating-card card-1">
+                        <div class="card-top">
+                            <span class="status active"></span>
+                            <h3>Q1 Planning</h3>
                         </div>
-                        <div class="mockup-content">
-                            <div class="task-item"></div>
-                            <div class="task-item"></div>
-                            <div class="task-item"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container">
-            <h2>Key Features</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-list-check"></i>
-                    </div>
-                    <h3>Create & Manage Tasks</h3>
-                    <p>Easily create, edit, and delete tasks with detailed descriptions and deadlines.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-layer-group"></i>
-                    </div>
-                    <h3>Organize with Categories</h3>
-                    <p>Categorize your tasks for better organization and quick filtering.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h3>Track Progress</h3>
-                    <p>Mark tasks as complete and monitor your productivity in real-time.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    <h3>Smart Reminders</h3>
-                    <p>Get notifications for upcoming deadlines and important tasks.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-sync"></i>
-                    </div>
-                    <h3>Real-time Sync</h3>
-                    <p>Access your tasks from any device with automatic synchronization.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Secure & Private</h3>
-                    <p>Your data is encrypted and protected with industry-standard security.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="how-it-works">
-        <div class="container">
-            <h2>How It Works</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Sign Up</h3>
-                    <p>Create your free account in seconds</p>
-                </div>
-                <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Create Tasks</h3>
-                    <p>Add your tasks and set deadlines</p>
-                </div>
-                <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Organize</h3>
-                    <p>Categorize and prioritize your work</p>
-                </div>
-                <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Execute</h3>
-                    <p>Complete your tasks and track progress</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Demo Section -->
-    <section id="demo" class="demo">
-        <div class="container">
-            <h2>See It In Action</h2>
-            <p>Check out our live application and start managing your tasks today</p>
-            <a href="https://taskboard-manager.vercel.app/" class="btn btn-primary btn-lg" target="_blank">
-                <i class="fas fa-external-link-alt"></i> View Live Demo
-            </a>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2>Get In Touch</h2>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="info-item">
-                        <i class="fas fa-github"></i>
-                        <div>
-                            <h4>GitHub</h4>
-                            <a href="https://github.com/rachit-barapatre/FSD-Task-Manager" target="_blank">
-                                View Repository
-                            </a>
+                        <div class="task-list">
+                            <div class="task done">
+                                <i class="fas fa-check"></i> Research phase
+                            </div>
+                            <div class="task">
+                                <i class="fas fa-circle"></i> Development
+                            </div>
+                            <div class="task">
+                                <i class="fas fa-circle"></i> Testing
+                            </div>
                         </div>
                     </div>
-                    <div class="info-item">
-                        <i class="fas fa-globe"></i>
-                        <div>
-                            <h4>Live App</h4>
-                            <a href="https://taskboard-manager.vercel.app/" target="_blank">
-                                taskboard-manager.vercel.app
-                            </a>
+
+                    <div class="floating-card card-2">
+                        <div class="card-top">
+                            <span class="status pending"></span>
+                            <h3>Design Review</h3>
                         </div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 65%"></div>
+                        </div>
+                        <p class="progress-text">65% Complete</p>
+                    </div>
+
+                    <div class="floating-card card-3">
+                        <div class="card-top">
+                            <span class="status urgent"></span>
+                            <h3>Deadline</h3>
+                        </div>
+                        <p class="deadline-text">
+                            <i class="fas fa-calendar"></i> Due Tomorrow
+                        </p>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Powerful Features</h2>
+                    <p>Everything you need to organize and execute your work</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon accent-blue">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3>Smart Tasks</h3>
+                        <p>Create, organize, and prioritize tasks with ease</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon accent-green">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Analytics</h3>
+                        <p>Track progress with real-time insights</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon accent-warm">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>Time Tracking</h3>
+                        <p>Monitor time spent on each task</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon accent-blue">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3>Notifications</h3>
+                        <p>Smart reminders that respect your time</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon accent-green">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Team Work</h3>
+                        <p>Collaborate seamlessly with your team</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon accent-warm">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Security</h3>
+                        <p>Enterprise-grade security for your data</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section id="benefits" class="benefits">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Why Choose TaskBoard?</h2>
+                    <p>Transform your productivity today</p>
+                </div>
+
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-num">01</div>
+                        <h3>Increased Productivity</h3>
+                        <p>40% more tasks completed on average</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-num">02</div>
+                        <h3>Better Organization</h3>
+                        <p>Never lose track of important work</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-num">03</div>
+                        <h3>Team Alignment</h3>
+                        <p>Everyone stays on the same page</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="benefit-num">04</div>
+                        <h3>Time Savings</h3>
+                        <p>Save 5+ hours per week</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workflow Section -->
+        <section id="workflow" class="workflow">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Get Started in 4 Steps</h2>
+                    <p>Simple setup, immediate results</p>
+                </div>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                        <h3>Sign Up</h3>
+                        <p>Create account in seconds</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <div class="step-icon"><i class="fas fa-sliders-h"></i></div>
+                        <h3>Setup</h3>
+                        <p>Configure your workspace</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <div class="step-icon"><i class="fas fa-plus-circle"></i></div>
+                        <h3>Add Tasks</h3>
+                        <p>Create your first tasks</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step">
+                        <div class="step-icon"><i class="fas fa-rocket"></i></div>
+                        <h3>Execute</h3>
+                        <p>Start being productive</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="pricing">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Simple Pricing</h2>
+                    <p>Choose the plan that fits your needs</p>
+                </div>
+
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>Starter</h3>
+                        <p class="plan-desc">Perfect for individuals</p>
+                        <div class="price">
+                            <span class="amount">$0</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> 100 tasks</li>
+                            <li><i class="fas fa-check"></i> Basic analytics</li>
+                            <li><i class="fas fa-check"></i> Email support</li>
+                            <li class="disabled"><i class="fas fa-times"></i> Team collaboration</li>
+                        </ul>
+                        <button class="btn-plan">Get Started</button>
+                    </div>
+
+                    <div class="pricing-card featured">
+                        <div class="pricing-badge">Most Popular</div>
+                        <h3>Professional</h3>
+                        <p class="plan-desc">For growing teams</p>
+                        <div class="price">
+                            <span class="amount">$9</span>
+                            <span class="period">/month</span>
+                        </div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Unlimited tasks</li>
+                            <li><i class="fas fa-check"></i> Advanced analytics</li>
+                            <li><i class="fas fa-check"></i> Priority support</li>
+                            <li><i class="fas fa-check"></i> Team collaboration</li>
+                        </ul>
+                        <button class="btn-plan btn-plan-primary">Start Free Trial</button>
+                    </div>
+
+                    <div class="pricing-card">
+                        <h3>Enterprise</h3>
+                        <p class="plan-desc">For large organizations</p>
+                        <div class="price">
+                            <span class="amount">Custom</span>
+                        </div>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check"></i> Everything in Pro</li>
+                            <li><i class="fas fa-check"></i> Dedicated support</li>
+                            <li><i class="fas fa-check"></i> Custom features</li>
+                            <li><i class="fas fa-check"></i> Advanced security</li>
+                        </ul>
+                        <button class="btn-plan">Contact Sales</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Ready to Transform Your Productivity?</h2>
+                    <p>Join thousands using TaskBoard to manage their work better</p>
+                    <a href="https://taskboard-manager.vercel.app/" class="btn-cta btn-cta-primary" target="_blank">
+                        Launch TaskBoard Now
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 TaskBoard Manager. Built with <span class="heart">❤</span> by Rachit Barapatre</p>
-            <div class="footer-links">
-                <a href="https://github.com/rachit-barapatre" target="_blank"><i class="fab fa-github"></i></a>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>TaskBoard</h4>
+                    <p>Professional task management platform built for productivity.</p>
+                    <div class="social">
+                        <a href="https://github.com/rachit-barapatre"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TaskBoard Manager. Built by <a href="https://github.com/rachit-barapatre">Rachit Barapatre</a></p>
             </div>
         </div>
     </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <iframe width="100%" height="600" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
 
     <script src="js/app.js"></script>
 </body>
