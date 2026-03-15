@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="TaskBoard Manager - Professional task management platform">
     <meta name="theme-color" content="#2d5a7b">
-    
+
     <title>TaskBoard Manager - Professional Task Management Platform</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <!-- Navigation Bar -->
     <header class="navbar">
         <div class="navbar-container">
             <div class="navbar-brand">
-                <a href="#home" class="brand-logo">
+                <a href="index.html" class="brand-logo">
                     <span class="logo-icon">📋</span>
                     <span class="brand-text">TaskBoard</span>
                 </a>
             </div>
-            
+
             <button class="hamburger" id="hamburger" aria-label="Toggle menu">
                 <span></span>
                 <span></span>
@@ -28,10 +30,10 @@
             </button>
 
             <nav class="nav-menu" id="navMenu">
-                <a href="#features">Features</a>
-                <a href="#benefits">Benefits</a>
-                <a href="#workflow">Workflow</a>
-                <a href="#pricing">Pricing</a>
+                <a href="index.html" class="active">Home</a>
+                <a href="features.html">Features</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="contact.html">Contact</a>
             </nav>
 
             <div class="navbar-actions">
@@ -55,8 +57,9 @@
                         <i class="fas fa-star"></i> Professional Task Manager
                     </div>
                     <h1>Your Productivity Hub Awaits</h1>
-                    <p>Designed for modern teams. Built for maximum productivity. Intuitive task management that adapts to your workflow.</p>
-                    
+                    <p>Designed for modern teams. Built for maximum productivity. Intuitive task management that adapts
+                        to your workflow.</p>
+
                     <div class="hero-buttons">
                         <a href="https://taskboard-manager.vercel.app/" class="btn btn-primary" target="_blank">
                             Start Free Today
@@ -112,100 +115,7 @@
             </div>
         </section>
 
-        <!-- Features Section -->
-        <section id="features" class="features">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Powerful Features</h2>
-                    <p>Everything you need to organize and execute your work</p>
-                </div>
-
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon accent-blue">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <h3>Smart Tasks</h3>
-                        <p>Create, organize, and prioritize tasks with ease</p>
-                    </div>
-
-                    <div class="feature-card">
-                        <div class="feature-icon accent-green">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h3>Analytics</h3>
-                        <p>Track progress with real-time insights</p>
-                    </div>
-
-                    <div class="feature-card">
-                        <div class="feature-icon accent-warm">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <h3>Time Tracking</h3>
-                        <p>Monitor time spent on each task</p>
-                    </div>
-
-                    <div class="feature-card">
-                        <div class="feature-icon accent-blue">
-                            <i class="fas fa-bell"></i>
-                        </div>
-                        <h3>Notifications</h3>
-                        <p>Smart reminders that respect your time</p>
-                    </div>
-
-                    <div class="feature-card">
-                        <div class="feature-icon accent-green">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h3>Team Work</h3>
-                        <p>Collaborate seamlessly with your team</p>
-                    </div>
-
-                    <div class="feature-card">
-                        <div class="feature-icon accent-warm">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3>Security</h3>
-                        <p>Enterprise-grade security for your data</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Benefits Section -->
-        <section id="benefits" class="benefits">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Why Choose TaskBoard?</h2>
-                    <p>Transform your productivity today</p>
-                </div>
-
-                <div class="benefits-grid">
-                    <div class="benefit-card">
-                        <div class="benefit-num">01</div>
-                        <h3>Increased Productivity</h3>
-                        <p>40% more tasks completed on average</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-num">02</div>
-                        <h3>Better Organization</h3>
-                        <p>Never lose track of important work</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-num">03</div>
-                        <h3>Team Alignment</h3>
-                        <p>Everyone stays on the same page</p>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-num">04</div>
-                        <h3>Time Savings</h3>
-                        <p>Save 5+ hours per week</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Workflow Section -->
+        <!-- Workflow Section (Kept on Homepage as overview) -->
         <section id="workflow" class="workflow">
             <div class="container">
                 <div class="section-header">
@@ -241,66 +151,6 @@
             </div>
         </section>
 
-        <!-- Pricing Section -->
-        <section id="pricing" class="pricing">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Simple Pricing</h2>
-                    <p>Choose the plan that fits your needs</p>
-                </div>
-
-                <div class="pricing-grid">
-                    <div class="pricing-card">
-                        <h3>Starter</h3>
-                        <p class="plan-desc">Perfect for individuals</p>
-                        <div class="price">
-                            <span class="amount">$0</span>
-                            <span class="period">/month</span>
-                        </div>
-                        <ul class="features-list">
-                            <li><i class="fas fa-check"></i> 100 tasks</li>
-                            <li><i class="fas fa-check"></i> Basic analytics</li>
-                            <li><i class="fas fa-check"></i> Email support</li>
-                            <li class="disabled"><i class="fas fa-times"></i> Team collaboration</li>
-                        </ul>
-                        <button class="btn-plan">Get Started</button>
-                    </div>
-
-                    <div class="pricing-card featured">
-                        <div class="pricing-badge">Most Popular</div>
-                        <h3>Professional</h3>
-                        <p class="plan-desc">For growing teams</p>
-                        <div class="price">
-                            <span class="amount">$9</span>
-                            <span class="period">/month</span>
-                        </div>
-                        <ul class="features-list">
-                            <li><i class="fas fa-check"></i> Unlimited tasks</li>
-                            <li><i class="fas fa-check"></i> Advanced analytics</li>
-                            <li><i class="fas fa-check"></i> Priority support</li>
-                            <li><i class="fas fa-check"></i> Team collaboration</li>
-                        </ul>
-                        <button class="btn-plan btn-plan-primary">Start Free Trial</button>
-                    </div>
-
-                    <div class="pricing-card">
-                        <h3>Enterprise</h3>
-                        <p class="plan-desc">For large organizations</p>
-                        <div class="price">
-                            <span class="amount">Custom</span>
-                        </div>
-                        <ul class="features-list">
-                            <li><i class="fas fa-check"></i> Everything in Pro</li>
-                            <li><i class="fas fa-check"></i> Dedicated support</li>
-                            <li><i class="fas fa-check"></i> Custom features</li>
-                            <li><i class="fas fa-check"></i> Advanced security</li>
-                        </ul>
-                        <button class="btn-plan">Contact Sales</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- CTA Section -->
         <section class="cta">
             <div class="container">
@@ -326,7 +176,7 @@
                     <div class="social">
                         <a href="https://github.com/rachit-barapatre"><i class="fab fa-github"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.linkedin.com/in/rachitbarapatre/"><i class="fab fa-linkedin"></i></a>
                     </div>
                 </div>
                 <div class="footer-col">
@@ -356,10 +206,12 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <button class="modal-close" id="modalClose">&times;</button>
-            <iframe width="100%" height="600" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+            <iframe width="100%" height="600" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0"
+                allowfullscreen></iframe>
         </div>
     </div>
 
     <script src="js/app.js"></script>
 </body>
+
 </html>
