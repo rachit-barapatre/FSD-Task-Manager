@@ -1,5 +1,5 @@
 // js/config.js
-export const API_KEY = "AIzaSyD5h2WpUtA6WVG5-xXA3FpFkvsW4dtrvkk";
+export const API_KEY = "AIzaSyDKu1n_EGj5CsGFi_11j6TTiuMkG9FVzrU";
 
 export const firebaseConfig = {
     apiKey: "AIzaSyBhmspI5mFEoTw7S1VuLfp_8S-QqBullXw", 

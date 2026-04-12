@@ -51,7 +51,12 @@ let undoTimeout = null;
 
 if (loginBtn) {
     loginBtn.addEventListener('click', () => {
-        signInWithPopup(auth, provider).catch((error) => alert(error.message));
+        signInWithPopup(auth, provider).catch((error) => {
+            // Suppress alerts for user-initiated cancellations or redundant popup requests
+            if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+                alert(error.message);
+            }
+        });
     });
 }
 
@@ -149,31 +154,13 @@ if (aiBtn) {
         }
 
         try {
-            // STEP 1: Check available model
-            const listResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
-            const listData = await listResponse.json();
-
-            if (listData.error) throw new Error("Model List Error: " + listData.error.message);
-
-            let validModel = "";
-            if (listData.models) {
-                const modelObj = listData.models.find(m => 
-                    m.supportedGenerationMethods && 
-                    m.supportedGenerationMethods.includes("generateContent") &&
-                    (m.name.includes("gemini"))
-                );
-                if (modelObj) {
-                    validModel = modelObj.name.replace("models/", ""); 
-                    console.log("✅ Auto-Selected Model:", validModel);
-                }
-            }
-
-            if (!validModel) validModel = "gemini-pro"; 
-
-            if(statusP) statusP.innerText = `Using: ${validModel}...`;
+            // Using gemini-2.5-flash as requested
+            const validModel = "gemini-2.5-flash"; 
+            
+            if(statusP) statusP.innerText = `Using ${validModel}...`;
 
             // STEP 2: Generate Content
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${validModel}:generateContent?key=${API_KEY}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/${validModel}:generateContent?key=${API_KEY}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
