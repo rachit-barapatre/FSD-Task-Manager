@@ -4,118 +4,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Task Board</title>
+    <meta name="description" content="TaskBoard Manager - Professional task management platform">
+    <meta name="theme-color" content="#2d5a7b">
+
+    <title>TaskBoard Manager - Professional Task Management Platform</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        .hidden { display: none !important; }
- 
-        #loginScreen {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: #f4f4f9;
-        }
-
-        #loginBtn {
-            background: #4285F4;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 1.1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 10px rgba(66, 133, 244, 0.3);
-            transition: transform 0.2s;
-        }
-        #loginBtn:hover { transform: scale(1.05); }
-
-        /* AI Button */
-        .btn-ai {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 50%;
-            cursor: pointer;
-            margin-right: 5px;
-            transition: transform 0.2s;
-        }
-        .btn-ai:hover { transform: scale(1.1); }
-        .btn-ai:disabled { opacity: 0.7; cursor: wait; }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
-
-    <div id="loginScreen">
-        <h1 style="color: #6C63FF; font-size: 2.5rem; margin-bottom: 10px;">Pro Task Board 🚀</h1>
-        <p style="color: #888; margin-bottom: 30px;">Login to save your tasks on Cloud.</p>
-        <button id="loginBtn"><i class="fab fa-google"></i> Sign in with Google</button>
-    </div>
-
-    <div class="container hidden" id="appContainer">
-        <header>
-            <div class="header-top">
-                <h1>My Tasks</h1>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <button id="themeToggle" class="btn-theme"><i class="fas fa-moon"></i></button>
-                    <button id="settingsBtn" class="btn-theme" title="AI Settings"><i class="fas fa-cog"></i></button>
-                    <button id="logoutBtn" style="border: 1px solid #ff6b6b; background: none; color: #ff6b6b; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Logout</button>
-                </div>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <a href="index.html" class="brand-logo">
+                    <span class="logo-icon">≡ƒôï</span>
+                    <span class="brand-text">TaskBoard</span>
+                </a>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
-                <p id="stats">0/0 Completed</p>
-                <div id="settingsBox" class="hidden" style="position: absolute; top: 70px; right: 20px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1000; border: 1px solid #ddd; width: 250px;">
-                    <h4 style="margin: 0 0 10px 0; font-size: 0.9rem;">⚙️ AI Settings</h4>
-                    <input type="password" id="apiKeyInput" placeholder="Paste Gemini API Key" style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.8rem;">
-                    <button id="saveKeyBtn" style="width: 100%; background: #6C63FF; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; font-size: 0.8rem;">Save Key</button>
-                    <p style="font-size: 0.7rem; color: #888; margin-top: 5px;">Key is saved locally in your browser.</p>
-                </div>
-                <p id="userDisplay" style="font-weight: bold; color: #6C63FF;"></p>
-            </div>
-        </header>
 
-        <div class="input-wrapper">
-            <div class="input-group">
-                <input type="text" id="taskInput" placeholder="Task Title (e.g., Plan Trip)">
-                <textarea id="descInput" placeholder="Add details... (optional)" rows="1"></textarea>
-            </div>
-            
-            <p id="aiStatus" style="font-size: 0.9rem; margin: 5px 0; font-weight: 500; min-height: 20px; color: #666;"></p>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
 
-            <div class="controls-group" style="display: flex; align-items: center; gap: 5px; margin-top: 10px;">
-                <input type="date" id="dateInput" class="date-picker">
-                <button id="micBtn" class="btn-mic"><i class="fas fa-microphone"></i></button>
-                
-                <button id="aiBtn" class="btn-ai" title="Ask AI">
-                    <i class="fas fa-magic"></i>
+            <nav class="nav-menu" id="navMenu">
+                <a href="index.html" class="active">Home</a>
+                <a href="features.html">Features</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="navbar-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
                 </button>
-
-                <button id="addBtn"><i class="fas fa-plus"></i></button>
+                <a href="app.html" class="btn-nav">
+                    Launch App
+                </a>
             </div>
         </div>
+    </header>
 
-        <div class="filter-group">
-            <button id="filterAll" class="filter-btn active">All</button>
-            <button id="filterPending" class="filter-btn">Pending</button>
-            <button id="filterCompleted" class="filter-btn">Completed</button>
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-star"></i> Professional Task Manager
+                    </div>
+                    <h1>Your Productivity Hub Awaits</h1>
+                    <p>Designed for modern teams. Built for maximum productivity. Intuitive task management that adapts
+                        to your workflow.</p>
+
+                    <div class="hero-buttons">
+                        <a href="app.html" class="btn btn-primary">
+                            Start Free Today
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <button class="btn btn-secondary" id="demoBtn">
+                            Watch Demo
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="floating-card card-1">
+                        <div class="card-top">
+                            <span class="status active"></span>
+                            <h3>Q1 Planning</h3>
+                        </div>
+                        <div class="task-list">
+                            <div class="task done">
+                                <i class="fas fa-check"></i> Research phase
+                            </div>
+                            <div class="task">
+                                <i class="fas fa-circle"></i> Development
+                            </div>
+                            <div class="task">
+                                <i class="fas fa-circle"></i> Testing
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="floating-card card-2">
+                        <div class="card-top">
+                            <span class="status pending"></span>
+                            <h3>Design Review</h3>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 65%"></div>
+                        </div>
+                        <p class="progress-text">65% Complete</p>
+                    </div>
+
+                    <div class="floating-card card-3">
+                        <div class="card-top">
+                            <span class="status urgent"></span>
+                            <h3>Deadline</h3>
+                        </div>
+                        <p class="deadline-text">
+                            <i class="fas fa-calendar"></i> Due Tomorrow
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workflow Section (Kept on Homepage as overview) -->
+        <section id="workflow" class="workflow">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Get Started in 4 Steps</h2>
+                    <p>Simple setup, immediate results</p>
+                </div>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                        <h3>Sign Up</h3>
+                        <p>Create account in seconds</p>
+                    </div>
+                    <div class="step-arrow">ΓåÆ</div>
+                    <div class="step">
+                        <div class="step-icon"><i class="fas fa-sliders-h"></i></div>
+                        <h3>Setup</h3>
+                        <p>Configure your workspace</p>
+                    </div>
+                    <div class="step-arrow">ΓåÆ</div>
+                    <div class="step">
+                        <div class="step-icon"><i class="fas fa-plus-circle"></i></div>
+                        <h3>Add Tasks</h3>
+                        <p>Create your first tasks</p>
+                    </div>
+                    <div class="step-arrow">ΓåÆ</div>
+                    <div class="step">
+                        <div class="step-icon"><i class="fas fa-rocket"></i></div>
+                        <h3>Execute</h3>
+                        <p>Start being productive</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Ready to Transform Your Productivity?</h2>
+                    <p>Join thousands using TaskBoard to manage their work better</p>
+                    <a href="contentPage/index.html" class="btn-cta btn-cta-primary" target="_blank">
+                        Launch TaskBoard Now
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>TaskBoard</h4>
+                    <p>Professional task management platform built for productivity.</p>
+                    <div class="social">
+                        <a href="https://github.com/rachit-barapatre"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.linkedin.com/in/rachitbarapatre/"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TaskBoard Manager. Built by <a href="https://github.com/rachit-barapatre">Rachit Barapatre</a></p>
+            </div>
         </div>
+    </footer>
 
-        <ul id="taskList" class="task-list"></ul>
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <iframe width="100%" height="600" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0"
+                allowfullscreen></iframe>
+        </div>
     </div>
 
-    <div id="undoToast" class="hidden">
-    <span>Task Deleted! 🗑️</span>
-    <button id="undoBtn">UNDO ↩️</button>
-</div>
-    <script type="module" src="js/app.js"></script>
+    <script src="js/app.js"></script>
 </body>
+
 </html>
