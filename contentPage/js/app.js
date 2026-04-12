@@ -179,7 +179,7 @@ if (aiBtn) {
         }
 
         try {
-            const key = getCurrentApiKey();
+            const key = await getCurrentApiKey();
             if (!key) {
                 alert("Please set your Gemini API Key in the ⚙️ Settings first!");
                 settingsBox.classList.remove('hidden');
