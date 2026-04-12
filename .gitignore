@@ -1,5 +1,6 @@
 # Firebase Configuration
-contentPage/js/config.js
+**/config.js
+**/config.json
 
 # VS Code
 .vscode/
