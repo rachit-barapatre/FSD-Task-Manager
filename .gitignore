@@ -1,0 +1,11 @@
+# Firebase Configuration
+contentPage/js/config.js
+
+# VS Code
+.vscode/
+
+# Local Dev
+node_modules/
+.env
+dist/
+*.log
