@@ -358,7 +358,30 @@ if (filters.all) filters.all.addEventListener('click', () => setActiveFilter('al
 if (filters.pending) filters.pending.addEventListener('click', () => setActiveFilter('pending'));
 if (filters.completed) filters.completed.addEventListener('click', () => setActiveFilter('completed'));
 
-if (themeToggle) { themeToggle.addEventListener('click', () => { document.body.classList.toggle('dark'); }); }
+// --- THEME LOGIC ---
+const applyTheme = (theme) => {
+    if (theme === 'dark') {
+        document.body.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+        document.body.classList.remove('dark');
+        document.documentElement.removeAttribute('data-theme');
+        if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+};
+
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        const isDark = document.body.classList.contains('dark');
+        const newTheme = isDark ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+    });
+}
+
+// Init theme on load
+applyTheme(localStorage.getItem('theme') || 'light');
 
 // Voice Logic
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
