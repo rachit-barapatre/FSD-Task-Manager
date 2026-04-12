@@ -67,11 +67,18 @@
                 <h1>My Tasks</h1>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <button id="themeToggle" class="btn-theme"><i class="fas fa-moon"></i></button>
+                    <button id="settingsBtn" class="btn-theme" title="AI Settings"><i class="fas fa-cog"></i></button>
                     <button id="logoutBtn" style="border: 1px solid #ff6b6b; background: none; color: #ff6b6b; padding: 5px 10px; border-radius: 5px; cursor: pointer;">Logout</button>
                 </div>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
                 <p id="stats">0/0 Completed</p>
+                <div id="settingsBox" class="hidden" style="position: absolute; top: 70px; right: 20px; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1000; border: 1px solid #ddd; width: 250px;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 0.9rem;">⚙️ AI Settings</h4>
+                    <input type="password" id="apiKeyInput" placeholder="Paste Gemini API Key" style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.8rem;">
+                    <button id="saveKeyBtn" style="width: 100%; background: #6C63FF; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; font-size: 0.8rem;">Save Key</button>
+                    <p style="font-size: 0.7rem; color: #888; margin-top: 5px;">Key is saved locally in your browser.</p>
+                </div>
                 <p id="userDisplay" style="font-weight: bold; color: #6C63FF;"></p>
             </div>
         </header>

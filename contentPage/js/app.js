@@ -3,14 +3,40 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebas
 import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
-import { API_KEY, firebaseConfig } from "./config.js";
+// --- STATE & CONFIG ---
+let API_KEY = "";
+let tasks = [];
+let currentUser = null;
+let unsubscribe = null;
+let currentFilter = 'all';
+let editId = null;
+let tempDeletedTask = null;
+let undoTimeout = null;
 
-// --- INITIALIZE ---
+const firebaseConfig = {
+    apiKey: "AIzaSyBhmspI5mFEoTw7S1VuLfp_8S-QqBullXw", 
+    authDomain: "pro-task-board.firebaseapp.com",
+    projectId: "pro-task-board",
+    storageBucket: "pro-task-board.firebasestorage.app",
+    messagingSenderId: "527388918652",
+    appId: "1:527388918652:web:7ee8c1f273837d2e1c5af9"
+};
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const tasksCol = collection(db, "tasks");
+
+// --- UTILS ---
+const getCurrentApiKey = async () => {
+    const local = localStorage.getItem("GEMINI_API_KEY");
+    if (local) return local;
+    try {
+        const config = await import("./config.js");
+        return config.API_KEY || "";
+    } catch (e) { return ""; }
+};
 
 // --- DOM ELEMENTS ---
 const loginScreen = document.getElementById('loginScreen');
@@ -18,7 +44,6 @@ const appContainer = document.getElementById('appContainer');
 const loginBtn = document.getElementById('loginBtn');
 const logoutBtn = document.getElementById('logoutBtn');
 const userDisplay = document.getElementById('userDisplay');
-
 const taskInput = document.getElementById('taskInput');
 const descInput = document.getElementById('descInput');
 const addBtn = document.getElementById('addBtn');
@@ -29,21 +54,26 @@ const micBtn = document.getElementById('micBtn');
 const themeToggle = document.getElementById('themeToggle');
 const aiBtn = document.getElementById('aiBtn'); 
 const aiStatus = document.getElementById('aiStatus');
-
-// Undo Elements
 const undoToast = document.getElementById('undoToast');
 const undoBtn = document.getElementById('undoBtn');
+const settingsBtn = document.getElementById('settingsBtn');
+const settingsBox = document.getElementById('settingsBox');
+const apiKeyInput = document.getElementById('apiKeyInput');
+const saveKeyBtn = document.getElementById('saveKeyBtn');
 
-// --- STATE ---
-let tasks = [];
-let currentUser = null;
-let unsubscribe = null;
-let currentFilter = 'all';
-let editId = null;
-
-// Undo State
-let tempDeletedTask = null;
-let undoTimeout = null;
+// --- SETTINGS LOGIC ---
+if (settingsBtn) settingsBtn.addEventListener('click', () => settingsBox.classList.toggle('hidden'));
+if (saveKeyBtn) {
+    saveKeyBtn.addEventListener('click', () => {
+        const val = apiKeyInput.value.trim();
+        if (val) {
+            localStorage.setItem("GEMINI_API_KEY", val);
+            alert("Status: Saved! 🚀");
+            settingsBox.classList.add('hidden');
+        }
+    });
+}
+if (apiKeyInput) apiKeyInput.value = localStorage.getItem("GEMINI_API_KEY") || "";
 
 // ==========================================
 // 🔐 AUTHENTICATION
@@ -51,12 +81,7 @@ let undoTimeout = null;
 
 if (loginBtn) {
     loginBtn.addEventListener('click', () => {
-        signInWithPopup(auth, provider).catch((error) => {
-            // Suppress alerts for user-initiated cancellations or redundant popup requests
-            if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-                alert(error.message);
-            }
-        });
+        signInWithPopup(auth, provider).catch((error) => alert(error.message));
     });
 }
 
@@ -154,23 +179,30 @@ if (aiBtn) {
         }
 
         try {
-            // Using gemini-2.5-flash as requested
-            const validModel = "gemini-2.5-flash"; 
-            
-            if(statusP) statusP.innerText = `Using ${validModel}...`;
+            const key = getCurrentApiKey();
+            if (!key) {
+                alert("Please set your Gemini API Key in the ⚙️ Settings first!");
+                settingsBox.classList.remove('hidden');
+                return;
+            }
 
-            // STEP 2: Generate Content
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/${validModel}:generateContent?key=${API_KEY}`, {
+            const validModel = "gemini-2.5-flash"; 
+            if(statusP) statusP.innerText = `Using AI Assistant...`;
+
+            // STEP 1: Generate Content (Stable V1 Endpoint)
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/${validModel}:generateContent?key=${key}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     contents: [{
                         parts: [{
-                            text: `Act as a productivity assistant. Break down this task: "${text}" into 3 short sub-tasks. Return ONLY sub-tasks separated by commas.`
+                            text: `Break down this task: "${text}" into 3 short sub-tasks. Return ONLY sub-tasks separated by commas.`
                         }]
                     }]
                 })
             });
+
+
 
             const data = await response.json();
 
